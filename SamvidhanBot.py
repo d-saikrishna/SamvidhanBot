@@ -1,20 +1,32 @@
-import tweepy as tw
 import pygsheets
 import random
 from decouple import config
 import os
 import time
+import requests
+from requests_oauthlib import OAuth1
+
 
 cwd = os.getcwd()
 def tweet_constititution_wisdom():
+
     consumer_key = config('consumer_key')
     consumer_secret = config('consumer_secret')
     access_token = config('access_token')
     access_token_secret = config('access_token_secret')
-    #print('Hi')
-    auth = tw.OAuthHandler(consumer_key, consumer_secret)
-    auth.set_access_token(access_token, access_token_secret)
-    api = tw.API(auth, wait_on_rate_limit=True)
+
+    oauth = OAuth1(
+        consumer_key,
+        client_secret=consumer_secret,
+        resource_owner_key=access_token,
+        resource_owner_secret=access_token_secret
+        )
+
+    # Twitter API endpoints
+    tweet_url = 'https://api.twitter.com/2/tweets'
+    media_upload_url = 'https://upload.twitter.com/1.1/media/upload.json'
+
+    # MAKE TWEET
     gc = pygsheets.authorize(service_file=cwd+r'/constitutionbot-3e833b17dba1.json')
     sh = gc.open('ConstitutionBot')
     wks = sh.worksheet('title', 'Sheet1')
@@ -43,16 +55,30 @@ def tweet_constititution_wisdom():
     #print(type(df['Author'][n]))
     #print(author_images)
     #print(tweet)
-    media_ids = []
+    # Upload the image
     
+    
+
 
     try:
         filename = author_images[random.randint(0, len(author_images) - 1)]
-        res = api.media_upload(cwd+r'/Media/'+filename)
-        media_ids.append(res.media_id)
-        api.update_status(status=tweet, media_ids=media_ids)
+        image_path = cwd+r'/Media/'+filename
+        files = {'media': (filename+'.jpg', open(image_path, 'rb'))}
+        media_response = requests.post(media_upload_url, auth=oauth, files=files)
+        media_id = media_response.json()['media_id_string']
+        tweet_data = {
+                        'text': tweet,
+                        'media': {'media_ids':[media_id]}
+                        }
+
     except:
-        api.update_status(status=tweet)
+        tweet_data = {
+                        'text': tweet
+                        }
+    
+    # Making the request
+    tweet_response = requests.post(tweet_url, auth=oauth, json=tweet_data)
+
 
 def run():
     while True:
