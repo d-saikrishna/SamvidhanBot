@@ -7,7 +7,7 @@ import requests
 from requests_oauthlib import OAuth1
 
 
-cwd = os.getcwd()
+dir = "/home/chaoticneuron/SamvidhanBot"
 def tweet_constititution_wisdom():
 
     consumer_key = config('consumer_key')
@@ -27,14 +27,14 @@ def tweet_constititution_wisdom():
     media_upload_url = 'https://upload.twitter.com/1.1/media/upload.json'
 
     # MAKE TWEET
-    gc = pygsheets.authorize(service_file=cwd+r'/constitutionbot-3e833b17dba1.json')
+    gc = pygsheets.authorize(service_file=dir+r'/constitutionbot-3e833b17dba1.json')
     sh = gc.open('ConstitutionBot')
     wks = sh.worksheet('title', 'Sheet1')
     df = wks.get_as_df()
     df = df[(df['Length'] <= 275) & (df['Length'] > 0)].reset_index(drop=True)
     n = random.randint(0, df.shape[0] - 1)
 
-    files = os.listdir(cwd+r'/Media/')
+    files = os.listdir(dir+r'/Media/')
     if (df['Author'][n] == 'NA'):
         tweet = str(df['Tweet'][n])
         author_images = [k for k in files if 'fact' in k]
@@ -62,7 +62,7 @@ def tweet_constititution_wisdom():
 
     try:
         filename = author_images[random.randint(0, len(author_images) - 1)]
-        image_path = cwd+r'/Media/'+filename
+        image_path = dir+r'/Media/'+filename
         files = {'media': (filename+'.jpg', open(image_path, 'rb'))}
         media_response = requests.post(media_upload_url, auth=oauth, files=files)
         media_id = media_response.json()['media_id_string']

@@ -1,4 +1,4 @@
-cd SamvidhanBot
+cd /home/chaoticneuron/SamvidhanBot
 source venv/bin/activate
-python SamvidhanBot.py
+nohup python /home/chaoticneuron/SamvidhanBot/SamvidhanBot.py &
 # chmod +x demo.sh - give execute permission
