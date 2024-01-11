@@ -30,3 +30,11 @@ media_upload_url = 'https://upload.twitter.com/1.1/media/upload.json'
 4. All my tweets information is stored in a google sheets. I used pygsheets to get one tweet and formatted it.
 
 5. Uploaded the media using media_upload_url; retreived media_ids and then used the tweet_url to tweet!
+
+6. To run the bot on every reboot of my Pi (cuz power cuts :/)
+
+        sudo nano /etc/rc.local
+        # Add the following before exit 0
+        /bin/bash /path/to/your/script.sh
+
+    I had created a run_bot.sh shell script which hsa the workflow coded.
