@@ -83,7 +83,7 @@ def tweet_constititution_wisdom():
 def run():
     while True:
         tweet_constititution_wisdom()
-        time.sleep(7200+7200)
+        time.sleep(7200)
 
 if __name__ == "__main__":
     run()
