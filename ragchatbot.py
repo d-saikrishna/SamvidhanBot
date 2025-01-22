@@ -57,23 +57,23 @@ retriever = db_disk.as_retriever(search_type="mmr",
 
 retrieval_chain = create_retrieval_chain(retriever, document_chain)
 
-show = True
-questions = ["Custom Prompt"]
+questions = ["Custom query"]
 with open(join("questions.txt")) as f:
     questions += f.read().split("\n")
 
 st.title("Talk to the people who made constitution!")
-query = st.selectbox("Select a query: ", questions, index=None, placeholder ="Choose Custom query to ask your own question")
-if query == "Custom query":
-    show = False
-    # React to user input
-    query = st.text_input("Ask your question")
+answer=''
 
-if query:
+query = st.selectbox("Select a query: ", questions, index=None, placeholder ="Choose Custom query to ask your own question")
+
+if query == "Custom query":
+    query = st.text_input("Ask your question",)
+
+with st.form(key='my_form_to_submit'):
+    submit_button = st.form_submit_button(label='Submit')
+
+    
+if submit_button:
     response = retrieval_chain.invoke({"input":query})
     answer = response['answer']
-else:
-    answer=''
-    
-
-st.write(answer)
+    st.write(answer)
