@@ -43,8 +43,8 @@ prompt = ChatPromptTemplate.from_template("""Answer the following question stric
                                           Question: {input}""")
 
 
-model = OllamaLLM(model="llama3.2")
-#model = HuggingFaceEndpoint(repo_id = repo_id, max_length=128, temperature=0.7,token=hf_key)
+#model = OllamaLLM(model="llama3.2")
+model = HuggingFaceEndpoint(repo_id = repo_id, max_length=128, temperature=0.7,token=hf_key)
 
 document_chain = create_stuff_documents_chain(model, prompt)
 
