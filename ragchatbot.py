@@ -18,7 +18,6 @@ load_dotenv()
 
 # Access the API key
 hf_key = os.getenv("HF_TOKEN")
-os.environ['HUGGINGFACEHUB_API_TOKEN'] = os.getenv("HUGGINGFACEHUB_API_TOKEN")
 repo_id = "mistralai/Mistral-7B-Instruct-v0.3"
 
 st.set_page_config(layout="wide", page_title="Samvidhan")
