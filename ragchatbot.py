@@ -27,7 +27,7 @@ st.set_page_config(layout="wide", page_title="Samvidhan")
 
 # Vector Embedding and Vector Store
 
-dir = r"C:/Users/dskcy/AI/SamvidhanBot"
+dir = os.getcwd()
 
 db_disk = Chroma(
     embedding_function=OllamaEmbeddings(model='llama3.2'),
