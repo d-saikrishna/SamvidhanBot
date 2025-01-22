@@ -12,6 +12,11 @@ import streamlit as st
 import os
 from os.path import join
 
+__import__('pysqlite3')
+import sys
+sys.modules['sqlite3'] = sys.modules.pop('pysqlite3')
+
+
 from dotenv import load_dotenv
 # Load environment variables from the .env file
 load_dotenv()
@@ -46,7 +51,6 @@ prompt = ChatPromptTemplate.from_template("""Answer the following question stric
 model = HuggingFaceEndpoint(repo_id = repo_id, max_length=128, temperature=0.7,token=hf_key)
 
 document_chain = create_stuff_documents_chain(model, prompt)
-
 retriever = db_disk.as_retriever(search_type="mmr", 
                                  search_kwargs={"k": 20, "fetch_k": 50, "lambda_mult":1,
                                                 })
