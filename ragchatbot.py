@@ -6,7 +6,9 @@ from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_ollama.llms import OllamaLLM
 from langchain.chains.combine_documents import create_stuff_documents_chain
-from langchain_huggingface import HuggingFaceEndpoint   
+from langchain_huggingface import HuggingFaceEndpoint
+from langchain.callbacks.tracers.langchain import wait_for_all_tracers
+
 
 import streamlit as st
 import os
@@ -79,7 +81,10 @@ with st.form(key='my_form_to_submit'):
     
 if submit_button:
     with st.spinner('Wait for it...'):
-        time.sleep(5) 
-        response = retrieval_chain.invoke({"input":query})
+        time.sleep(5)
+        try: 
+            response = retrieval_chain.invoke({"input":query})
+        finally:
+            wait_for_all_tracers()
         answer = response['answer']
     st.write(answer)
