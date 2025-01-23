@@ -1,4 +1,4 @@
-from langchain_community.embeddings import OllamaEmbeddings
+from langchain_community.embeddings import OllamaEmbeddings, HuggingFaceHubEmbeddings
 from langchain_community import embeddings
 from langchain_community.vectorstores import Chroma
 from langchain.chains import create_retrieval_chain
@@ -11,7 +11,7 @@ from langchain_huggingface import HuggingFaceEndpoint
 import streamlit as st
 import os
 from os.path import join
-
+import time 
 __import__('pysqlite3')
 import sys
 sys.modules['sqlite3'] = sys.modules.pop('pysqlite3')
@@ -23,7 +23,6 @@ load_dotenv()
 
 # Access the API key
 hf_key = os.getenv("HF_TOKEN")
-repo_id = "mistralai/Mistral-7B-Instruct-v0.3"
 
 st.set_page_config(layout="wide", page_title="Samvidhan")
 # Following line will help in seeing dynamic session states
@@ -34,12 +33,15 @@ st.set_page_config(layout="wide", page_title="Samvidhan")
 dir = os.getcwd()
 
 db_disk = Chroma(
-    embedding_function=OllamaEmbeddings(model='llama3.2'),
+    #embedding_function=OllamaEmbeddings(model='llama3.2'),
+    embedding_function=HuggingFaceHubEmbeddings(model='sentence-transformers/all-mpnet-base-v2',
+                                                huggingfacehub_api_token=hf_key),
     persist_directory=dir+"/db",
 )
 
 #Design Prompt Template
-prompt = ChatPromptTemplate.from_template("""Answer the following question strictly based on provided context. 
+prompt = ChatPromptTemplate.from_template("""Answer the following question strictly based on provided context.
+                                          The context is the debates from the Constitutional Assembly of India.
                                           Execute Python codes if needed to answer for any calculations, don't print code in the answer.
                                           <context>
                                           {context}
@@ -48,7 +50,9 @@ prompt = ChatPromptTemplate.from_template("""Answer the following question stric
 
 
 #model = OllamaLLM(model="llama3.2")
-model = HuggingFaceEndpoint(repo_id = repo_id, max_length=128, temperature=0.7,token=hf_key)
+repo_id = "mistralai/Mistral-7B-Instruct-v0.3"
+
+model = HuggingFaceEndpoint(repo_id = repo_id, max_length=1000, temperature=0.5,token=hf_key)
 
 document_chain = create_stuff_documents_chain(model, prompt)
 retriever = db_disk.as_retriever(search_type="mmr", 
@@ -61,7 +65,7 @@ questions = ["Custom query"]
 with open(join("questions.txt")) as f:
     questions += f.read().split("\n")
 
-st.title("Talk to the people who made constitution!")
+st.title("Talk to the people who made Constitution!")
 answer=''
 
 query = st.selectbox("Select a query: ", questions, index=None, placeholder ="Choose Custom query to ask your own question")
@@ -74,6 +78,8 @@ with st.form(key='my_form_to_submit'):
 
     
 if submit_button:
-    response = retrieval_chain.invoke({"input":query})
-    answer = response['answer']
+    with st.spinner('Wait for it...'):
+        time.sleep(5) 
+        response = retrieval_chain.invoke({"input":query})
+        answer = response['answer']
     st.write(answer)
