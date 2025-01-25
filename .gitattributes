@@ -1,2 +1,0 @@
-db/*.sqlite3 filter=lfs diff=lfs merge=lfs -text
-db/807fb473-cc0c-44f2-a8fc-bf8a93809f59/*.bin filter=lfs diff=lfs merge=lfs -text
