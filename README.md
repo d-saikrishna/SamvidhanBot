@@ -5,7 +5,7 @@ Wisdom of the Constitution of India and its makers.
 
 The RAG Chatbot helps users talk to the makers of the Indian Constitution. This is deployed using Streamlit here: [https://constitutionbot.streamlit.app/](https://constitutionbot.streamlit.app/)
 
-The code for this is app is here: `ragchatbot.py`
+The code for this is app is here: `cadchatbot.py`
 
 I detailed the process I followed in this blog: [Medium](https://medium.com/@saikrishna_17904/e9b75282c54f)
 
