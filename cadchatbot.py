@@ -111,19 +111,3 @@ if submit_button:
         response = retrieval_chain.invoke({"input":query}, config=config)
         answer = response['answer']
     st.write(answer)
-
-# Footer
-st.markdown("""
-        <h10 style="text-align: center;
-                    float: left;
-                    bottom: 3rem;">
-            Follow <a href="https://x.com/SamvidhanBot"> SamvidhanBot</a> on X <br>
-            </h10>""",
-            unsafe_allow_html=True)
-st.markdown("""
-        <h10 style="text-align: center;
-                    float: right;
-                    bottom: 3rem;">
-            Give a ⭐ on <a href="https://github.com/d-saikrishna/SamvidhanBot"> GitHub</a>
-            </h10>""",
-            unsafe_allow_html=True)
